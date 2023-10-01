@@ -68,7 +68,12 @@ void display7SEG(int num) {
 	HAL_GPIO_WritePin(SEG_6_GPIO_Port, SEG_6_Pin, AnodeNumber[num]&0x40?SET:RESET);
 
 }
-
+void enable7SEG(int num) {
+	HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, num==0?RESET:SET);
+	HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, num==1?RESET:SET);
+	HAL_GPIO_WritePin(EN_2_GPIO_Port, EN_2_Pin, num==2?RESET:SET);
+	HAL_GPIO_WritePin(EN_3_GPIO_Port, EN_3_Pin, num==3?RESET:SET);
+}
 /* USER CODE END 0 */
 
 /**
@@ -253,10 +258,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 				}
 	switch(status) {
 	case 0:
-		HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, RESET);
-		HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, SET);
-		HAL_GPIO_WritePin(EN_2_GPIO_Port, EN_2_Pin, SET);
-		HAL_GPIO_WritePin(EN_3_GPIO_Port, EN_3_Pin, SET);
+		enable7SEG(status);
 		display7SEG(1);
 		if(counter <= 0) {
 			counter = 50;
@@ -264,10 +266,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		}
 		break;
 	case 1:
-		HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, SET);
-		HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, RESET);
-		HAL_GPIO_WritePin(EN_2_GPIO_Port, EN_2_Pin, SET);
-		HAL_GPIO_WritePin(EN_3_GPIO_Port, EN_3_Pin, SET);
+		enable7SEG(status);
 		display7SEG(2);
 		if(counter <= 0) {
 			counter = 50;
@@ -277,10 +276,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		}
 		break;
 	case 2:
-		HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, SET);
-		HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, SET);
-		HAL_GPIO_WritePin(EN_2_GPIO_Port, EN_2_Pin, RESET);
-		HAL_GPIO_WritePin(EN_3_GPIO_Port, EN_3_Pin, SET);
+		enable7SEG(status);
 		display7SEG(3);
 		if(counter <= 0) {
 			counter = 50;
@@ -288,10 +284,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		}
 		break;
 	case 3:
-		HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, SET);
-		HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, SET);
-		HAL_GPIO_WritePin(EN_2_GPIO_Port, EN_2_Pin, SET);
-		HAL_GPIO_WritePin(EN_3_GPIO_Port, EN_3_Pin, RESET);
+		enable7SEG(status);
 		display7SEG(0);
 		if(counter <= 0) {
 			counter = 50;
