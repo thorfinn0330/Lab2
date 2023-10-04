@@ -56,6 +56,8 @@ static void MX_TIM2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+int hour = 15, minute = 8, second = 50;
+
 char AnodeNumber[] = {0xC0,0xF9,0xA4,0xB0,0x99,0x92,0x82,0xF8,0x80,0x90,0x80}; //0 - 9,dp
 void display7SEG(int num) {
 	HAL_GPIO_WritePin(SEG_0_GPIO_Port, SEG_0_Pin, AnodeNumber[num]&0x01?SET:RESET);
@@ -114,12 +116,19 @@ void enable7SEG(int num) {
 	HAL_GPIO_WritePin(EN_2_GPIO_Port, EN_2_Pin, num==2?RESET:SET);
 	HAL_GPIO_WritePin(EN_3_GPIO_Port, EN_3_Pin, num==3?RESET:SET);
 }
+void updateClockBuffer() {
+	led_buffer[0] = hour/10;
+	led_buffer[1] = hour%10;
+	led_buffer[2] = minute/10;
+	led_buffer[3] = minute%10;
+}
 /* USER CODE END 0 */
 
 /**
   * @brief  The application entry point.
   * @retval int
   */
+
 int main(void)
 {
   /* USER CODE BEGIN 1 */
@@ -153,8 +162,20 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  //HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
-	  //HAL_Delay(1000);
+	  second++;
+	  if (second >= 60){
+		  second = 0;
+		  minute++;
+	  }
+	  if(minute >= 60){
+		  minute = 0;
+		  hour++;
+	  }
+	  if(hour >=24){
+		  hour = 0;
+	  }
+	  updateClockBuffer();
+	  HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
