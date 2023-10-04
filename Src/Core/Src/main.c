@@ -178,8 +178,21 @@ int main(void)
   while (1)
   {
 	  if(timer0_flag == 1) {
-		  HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
-		  setTimer0(2000);
+		  second++;
+		  if (second >= 60){
+			  second = 0;
+			  minute++;
+		  }
+		  if(minute >= 60){
+			  minute = 0;
+			  hour++;
+		  }
+		  if(hour >=24){
+			  hour = 0;
+		  }
+		  HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+		  updateClockBuffer();
+		  setTimer0(1000);
 	  }
     /* USER CODE END WHILE */
 
