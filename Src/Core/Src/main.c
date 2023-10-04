@@ -56,6 +56,18 @@ static void MX_TIM2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+char AnodeNumber[] = {0xC0,0xF9,0xA4,0xB0,0x99,0x92,0x82,0xF8,0x80,0x90,0x80}; //0 - 9,dp
+void display7SEG(int num) {
+	HAL_GPIO_WritePin(SEG_0_GPIO_Port, SEG_0_Pin, AnodeNumber[num]&0x01?SET:RESET);
+	HAL_GPIO_WritePin(SEG_1_GPIO_Port, SEG_1_Pin, AnodeNumber[num]&0x02?SET:RESET);
+	HAL_GPIO_WritePin(SEG_2_GPIO_Port, SEG_2_Pin, AnodeNumber[num]&0x04?SET:RESET);
+	HAL_GPIO_WritePin(SEG_3_GPIO_Port, SEG_3_Pin, AnodeNumber[num]&0x08?SET:RESET);
+	HAL_GPIO_WritePin(SEG_4_GPIO_Port, SEG_4_Pin, AnodeNumber[num]&0x10?SET:RESET);
+	HAL_GPIO_WritePin(SEG_5_GPIO_Port, SEG_5_Pin, AnodeNumber[num]&0x20?SET:RESET);
+	HAL_GPIO_WritePin(SEG_6_GPIO_Port, SEG_6_Pin, AnodeNumber[num]&0x40?SET:RESET);
+
+}
+
 const int MAX_LED = 4;
 int index_led = 0;
 int led_buffer[4] = {1, 2, 3, 4};
@@ -95,18 +107,7 @@ void update7SEG(int index){
 	}
 
 }
-char AnodeNumber[] = {0xC0,0xF9,0xA4,0xB0,0x99,0x92,0x82,0xF8,0x80,0x90,0x80}; //0 - 9,dp
 
-void display7SEG(int num) {
-	HAL_GPIO_WritePin(SEG_0_GPIO_Port, SEG_0_Pin, AnodeNumber[num]&0x01?SET:RESET);
-	HAL_GPIO_WritePin(SEG_1_GPIO_Port, SEG_1_Pin, AnodeNumber[num]&0x02?SET:RESET);
-	HAL_GPIO_WritePin(SEG_2_GPIO_Port, SEG_2_Pin, AnodeNumber[num]&0x04?SET:RESET);
-	HAL_GPIO_WritePin(SEG_3_GPIO_Port, SEG_3_Pin, AnodeNumber[num]&0x08?SET:RESET);
-	HAL_GPIO_WritePin(SEG_4_GPIO_Port, SEG_4_Pin, AnodeNumber[num]&0x10?SET:RESET);
-	HAL_GPIO_WritePin(SEG_5_GPIO_Port, SEG_5_Pin, AnodeNumber[num]&0x20?SET:RESET);
-	HAL_GPIO_WritePin(SEG_6_GPIO_Port, SEG_6_Pin, AnodeNumber[num]&0x40?SET:RESET);
-
-}
 void enable7SEG(int num) {
 	HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, num==0?RESET:SET);
 	HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, num==1?RESET:SET);
@@ -288,16 +289,18 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-int counter = 50;
+int counter = 25;
 int  status =0;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	counter--;
 	if(counter <= 0) {
-		if(index_led >= MAX_LED) index_led=0;
-		counter = 50;
+		if(index_led >= MAX_LED) {
+			index_led=0;
+			HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
+		}
+		counter = 25;
 		update7SEG(index_led++);
-		if(status) HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
-		status = 1-status;
+
 	}
 }
 /* USER CODE END 4 */
