@@ -173,10 +173,11 @@ void enableMatrixRow(int row) {
 	HAL_GPIO_WritePin(ENM_7_GPIO_Port, ENM_7_Pin, row==7?RESET:SET);
 }
 
-const int MAX_LED_MAXTRIX = 8;
+const int MAX_LED_MAXTRIX = 16;
 int index_led_matrix = 0;
+int shift_bit = 0;
 //uint8_t matrix_buffer[8] = {0x18,0x3C,0x66,0x66,0x7E,0x66,0x66,0x66};
-uint8_t matrix_buffer[8] = {0x00,0x3F,0x7F,0xCC,0xCC,0x7F,0x3F,0x00};
+uint8_t matrix_buffer[16] = {0x00,0x3F,0x7F,0xCC,0xCC,0x7F,0x3F,0x00,0x00,0xFF,0xFF,0x99,0x99,0xff,0x66,0x00};
 void displayLEDMaxtrix(int index) {
 	HAL_GPIO_WritePin(ROW_0_GPIO_Port, ROW_0_Pin, matrix_buffer[index]&0x01?RESET:SET);
 	HAL_GPIO_WritePin(ROW_1_GPIO_Port, ROW_1_Pin, matrix_buffer[index]&0x02?RESET:SET);
@@ -187,9 +188,9 @@ void displayLEDMaxtrix(int index) {
 	HAL_GPIO_WritePin(ROW_6_GPIO_Port, ROW_6_Pin, matrix_buffer[index]&0x40?RESET:SET);
 	HAL_GPIO_WritePin(ROW_7_GPIO_Port, ROW_7_Pin, matrix_buffer[index]&0x80?RESET:SET);
 }
-void updateLEDMatrix(int index) {
+void updateLEDMatrix(int index, int shift_bit) {
 	enableMatrixRow(index);
-	displayLEDMaxtrix(index);
+	displayLEDMaxtrix((index+shift_bit)%MAX_LED_MAXTRIX);
 	/*switch(index) {
 	case 0:
 		break;
@@ -285,8 +286,9 @@ int main(void)
 	  if(timer2_flag == 1) {
 		  if(index_led_matrix >= MAX_LED_MAXTRIX) {
 					index_led_matrix=0;
+					shift_bit = (shift_bit+1)% MAX_LED_MAXTRIX;
 		  }
-		  updateLEDMatrix(index_led_matrix++);
+		  updateLEDMatrix(index_led_matrix++, shift_bit);
 		  setTimer2(50);
 	  	  }
     /* USER CODE END WHILE */
