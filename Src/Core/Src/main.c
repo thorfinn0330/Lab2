@@ -162,57 +162,47 @@ void updateClockBuffer() {
 	led_buffer[3] = minute%10;
 }
 
-void enableMatrixRow(int row) {
-	HAL_GPIO_WritePin(ENM_0_GPIO_Port, ENM_0_Pin, row==0?RESET:SET);
-	HAL_GPIO_WritePin(ENM_1_GPIO_Port, ENM_1_Pin, row==1?RESET:SET);
-	HAL_GPIO_WritePin(ENM_2_GPIO_Port, ENM_2_Pin, row==2?RESET:SET);
-	HAL_GPIO_WritePin(ENM_3_GPIO_Port, ENM_3_Pin, row==3?RESET:SET);
-	HAL_GPIO_WritePin(ENM_4_GPIO_Port, ENM_4_Pin, row==4?RESET:SET);
-	HAL_GPIO_WritePin(ENM_5_GPIO_Port, ENM_5_Pin, row==5?RESET:SET);
-	HAL_GPIO_WritePin(ENM_6_GPIO_Port, ENM_6_Pin, row==6?RESET:SET);
-	HAL_GPIO_WritePin(ENM_7_GPIO_Port, ENM_7_Pin, row==7?RESET:SET);
+void enableMatrixCol(int col) {
+	HAL_GPIO_WritePin(ENM_0_GPIO_Port, ENM_0_Pin, col==0?RESET:SET);
+	HAL_GPIO_WritePin(ENM_1_GPIO_Port, ENM_1_Pin, col==1?RESET:SET);
+	HAL_GPIO_WritePin(ENM_2_GPIO_Port, ENM_2_Pin, col==2?RESET:SET);
+	HAL_GPIO_WritePin(ENM_3_GPIO_Port, ENM_3_Pin, col==3?RESET:SET);
+	HAL_GPIO_WritePin(ENM_4_GPIO_Port, ENM_4_Pin, col==4?RESET:SET);
+	HAL_GPIO_WritePin(ENM_5_GPIO_Port, ENM_5_Pin, col==5?RESET:SET);
+	HAL_GPIO_WritePin(ENM_6_GPIO_Port, ENM_6_Pin, col==6?RESET:SET);
+	HAL_GPIO_WritePin(ENM_7_GPIO_Port, ENM_7_Pin, col==7?RESET:SET);
 }
 
 const int MAX_LED_MAXTRIX = 8;
 int index_led_matrix = 0;
-//uint8_t matrix_buffer[8] = {0x18,0x3C,0x66,0x66,0x7E,0x66,0x66,0x66};
-uint8_t matrix_buffer[8] = {0x00,0x3F,0x7F,0xCC,0xCC,0x7F,0x3F,0x00};
+uint8_t matrix_buffer[8] = {0x00,0xFC,0xFE,0x33,0x33,0xFE,0xFC,0x00}; //value for display character "A"
+//If the value of the xth bit in matrix_buffer[index] is 1, the led in row x is turned on
+//use Bitwise operation "&" to find the xth bit value
 void displayLEDMaxtrix(int index) {
+	//0x01 in binary is 0000 0001 => mask for first bit
 	HAL_GPIO_WritePin(ROW_0_GPIO_Port, ROW_0_Pin, matrix_buffer[index]&0x01?RESET:SET);
+	//0x02 in binary is 0000 0010 => mask for second bit
 	HAL_GPIO_WritePin(ROW_1_GPIO_Port, ROW_1_Pin, matrix_buffer[index]&0x02?RESET:SET);
+	//0x04 in binary is 0000 0100 => mask for third bit
 	HAL_GPIO_WritePin(ROW_2_GPIO_Port, ROW_2_Pin, matrix_buffer[index]&0x04?RESET:SET);
+	//0x08 in binary is 0000 1000 => mask for forth bit
 	HAL_GPIO_WritePin(ROW_3_GPIO_Port, ROW_3_Pin, matrix_buffer[index]&0x08?RESET:SET);
+	//0x10 in binary is 0001 0000 => mask for fifth bit
 	HAL_GPIO_WritePin(ROW_4_GPIO_Port, ROW_4_Pin, matrix_buffer[index]&0x10?RESET:SET);
+	//0x20 in binary is 0010 0000 => mask for sixth bit
 	HAL_GPIO_WritePin(ROW_5_GPIO_Port, ROW_5_Pin, matrix_buffer[index]&0x20?RESET:SET);
+	//0x40 in binary is 0100 0000 => mask for seventh bit
 	HAL_GPIO_WritePin(ROW_6_GPIO_Port, ROW_6_Pin, matrix_buffer[index]&0x40?RESET:SET);
+	//0x80 in binary is 1000 0000 => mask for eightth bit
 	HAL_GPIO_WritePin(ROW_7_GPIO_Port, ROW_7_Pin, matrix_buffer[index]&0x80?RESET:SET);
 }
-void updateLEDMatrix(int index) {
-	enableMatrixRow(index);
-	displayLEDMaxtrix(index);
-	/*switch(index) {
-	case 0:
-		break;
-	case 1:
-		break;
-	case 2:
-		break;
-	case 3:
-		break;
-	case 4:
-		break;
-	case 5:
-		break;
-	case 6:
-		break;
-	case 7:
-		break;
-	default:
-		break;
-	}*/
-	index%=MAX_LED_MAXTRIX;
-	enableMatrixRow(index);
 
+//displayD is a general function for all cases
+//so there is no need to use the Switch-Case structure in the updateLEDMatrix function
+void updateLEDMatrix(int index) {
+	index%=MAX_LED_MAXTRIX;
+	enableMatrixCol(index);
+	displayLEDMaxtrix(index);
 }
 
 /* USER CODE END 0 */
