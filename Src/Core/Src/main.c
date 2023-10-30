@@ -162,6 +162,10 @@ void updateClockBuffer() {
 	led_buffer[3] = minute%10;
 }
 
+const int MAX_LED_MATRIX = 8;
+int index_led_matrix = 0;
+
+//The column col is enabled
 void enableMatrixCol(int col) {
 	HAL_GPIO_WritePin(ENM_0_GPIO_Port, ENM_0_Pin, col==0?RESET:SET);
 	HAL_GPIO_WritePin(ENM_1_GPIO_Port, ENM_1_Pin, col==1?RESET:SET);
@@ -173,12 +177,10 @@ void enableMatrixCol(int col) {
 	HAL_GPIO_WritePin(ENM_7_GPIO_Port, ENM_7_Pin, col==7?RESET:SET);
 }
 
-const int MAX_LED_MAXTRIX = 8;
-int index_led_matrix = 0;
 uint8_t matrix_buffer[8] = {0x00,0xFC,0xFE,0x33,0x33,0xFE,0xFC,0x00}; //value for display character "A"
 //If the value of the xth bit in matrix_buffer[index] is 1, the led in row x is turned on
 //use Bitwise operation "&" to find the xth bit value
-void displayLEDMaxtrix(int index) {
+void displayLEDMatrix(int index) {
 	//0x01 in binary is 0000 0001 => mask for first bit
 	HAL_GPIO_WritePin(ROW_0_GPIO_Port, ROW_0_Pin, matrix_buffer[index]&0x01?RESET:SET);
 	//0x02 in binary is 0000 0010 => mask for second bit
@@ -193,16 +195,16 @@ void displayLEDMaxtrix(int index) {
 	HAL_GPIO_WritePin(ROW_5_GPIO_Port, ROW_5_Pin, matrix_buffer[index]&0x20?RESET:SET);
 	//0x40 in binary is 0100 0000 => mask for seventh bit
 	HAL_GPIO_WritePin(ROW_6_GPIO_Port, ROW_6_Pin, matrix_buffer[index]&0x40?RESET:SET);
-	//0x80 in binary is 1000 0000 => mask for eightth bit
+	//0x80 in binary is 1000 0000 => mask for eighth bit
 	HAL_GPIO_WritePin(ROW_7_GPIO_Port, ROW_7_Pin, matrix_buffer[index]&0x80?RESET:SET);
 }
 
-//displayD is a general function for all cases
+//displayLEDMatrix is a general function for all column cases
 //so there is no need to use the Switch-Case structure in the updateLEDMatrix function
 void updateLEDMatrix(int index) {
-	index%=MAX_LED_MAXTRIX;
+	index%=MAX_LED_MATRIX;					//Make sure index is within valid range
 	enableMatrixCol(index);
-	displayLEDMaxtrix(index);
+	displayLEDMatrix(index);
 }
 
 /* USER CODE END 0 */
@@ -273,7 +275,7 @@ int main(void)
 		  setTimer1(250);
 	  }
 	  if(timer2_flag == 1) {
-		  if(index_led_matrix >= MAX_LED_MAXTRIX) {
+		  if(index_led_matrix >= MAX_LED_MATRIX) {
 					index_led_matrix=0;
 		  }
 		  updateLEDMatrix(index_led_matrix++);

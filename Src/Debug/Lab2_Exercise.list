@@ -41,11 +41,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  18 .debug_line   00009ab9  00000000  00000000  0004073e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000822b2  00000000  00000000  0004a1f7  2**0
+ 19 .debug_str    000822b0  00000000  00000000  0004a1f7  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_frame  00002758  00000000  00000000  000cc4ac  2**2
+ 20 .debug_frame  00002758  00000000  00000000  000cc4a8  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 0000003e  00000000  00000000  000cec04  2**0
+ 21 .debug_line_str 0000003e  00000000  00000000  000cec00  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -583,6 +583,10 @@ void updateClockBuffer() {
 
 08000500 <enableMatrixCol>:
 
+const int MAX_LED_MATRIX = 8;
+int index_led_matrix = 0;
+
+//The column col is enabled
 void enableMatrixCol(int col) {
  8000500:	b580      	push	{r7, lr}
  8000502:	b082      	sub	sp, #8
@@ -683,20 +687,19 @@ void enableMatrixCol(int col) {
  80005ca:	bd80      	pop	{r7, pc}
  80005cc:	40010800 	.word	0x40010800
 
-080005d0 <displayLEDMaxtrix>:
-const int MAX_LED_MAXTRIX = 8;
-int index_led_matrix = 0;
+080005d0 <displayLEDMatrix>:
+
 uint8_t matrix_buffer[8] = {0x00,0xFC,0xFE,0x33,0x33,0xFE,0xFC,0x00}; //value for display character "A"
 //If the value of the xth bit in matrix_buffer[index] is 1, the led in row x is turned on
 //use Bitwise operation "&" to find the xth bit value
-void displayLEDMaxtrix(int index) {
+void displayLEDMatrix(int index) {
  80005d0:	b580      	push	{r7, lr}
  80005d2:	b082      	sub	sp, #8
  80005d4:	af00      	add	r7, sp, #0
  80005d6:	6078      	str	r0, [r7, #4]
 	//0x01 in binary is 0000 0001 => mask for first bit
 	HAL_GPIO_WritePin(ROW_0_GPIO_Port, ROW_0_Pin, matrix_buffer[index]&0x01?RESET:SET);
- 80005d8:	4a44      	ldr	r2, [pc, #272]	; (80006ec <displayLEDMaxtrix+0x11c>)
+ 80005d8:	4a44      	ldr	r2, [pc, #272]	; (80006ec <displayLEDMatrix+0x11c>)
  80005da:	687b      	ldr	r3, [r7, #4]
  80005dc:	4413      	add	r3, r2
  80005de:	781b      	ldrb	r3, [r3, #0]
@@ -708,11 +711,11 @@ void displayLEDMaxtrix(int index) {
  80005ec:	b2db      	uxtb	r3, r3
  80005ee:	461a      	mov	r2, r3
  80005f0:	f44f 7180 	mov.w	r1, #256	; 0x100
- 80005f4:	483e      	ldr	r0, [pc, #248]	; (80006f0 <displayLEDMaxtrix+0x120>)
+ 80005f4:	483e      	ldr	r0, [pc, #248]	; (80006f0 <displayLEDMatrix+0x120>)
  80005f6:	f000 fd9f 	bl	8001138 <HAL_GPIO_WritePin>
 	//0x02 in binary is 0000 0010 => mask for second bit
 	HAL_GPIO_WritePin(ROW_1_GPIO_Port, ROW_1_Pin, matrix_buffer[index]&0x02?RESET:SET);
- 80005fa:	4a3c      	ldr	r2, [pc, #240]	; (80006ec <displayLEDMaxtrix+0x11c>)
+ 80005fa:	4a3c      	ldr	r2, [pc, #240]	; (80006ec <displayLEDMatrix+0x11c>)
  80005fc:	687b      	ldr	r3, [r7, #4]
  80005fe:	4413      	add	r3, r2
  8000600:	781b      	ldrb	r3, [r3, #0]
@@ -724,11 +727,11 @@ void displayLEDMaxtrix(int index) {
  800060e:	b2db      	uxtb	r3, r3
  8000610:	461a      	mov	r2, r3
  8000612:	f44f 7100 	mov.w	r1, #512	; 0x200
- 8000616:	4836      	ldr	r0, [pc, #216]	; (80006f0 <displayLEDMaxtrix+0x120>)
+ 8000616:	4836      	ldr	r0, [pc, #216]	; (80006f0 <displayLEDMatrix+0x120>)
  8000618:	f000 fd8e 	bl	8001138 <HAL_GPIO_WritePin>
 	//0x04 in binary is 0000 0100 => mask for third bit
 	HAL_GPIO_WritePin(ROW_2_GPIO_Port, ROW_2_Pin, matrix_buffer[index]&0x04?RESET:SET);
- 800061c:	4a33      	ldr	r2, [pc, #204]	; (80006ec <displayLEDMaxtrix+0x11c>)
+ 800061c:	4a33      	ldr	r2, [pc, #204]	; (80006ec <displayLEDMatrix+0x11c>)
  800061e:	687b      	ldr	r3, [r7, #4]
  8000620:	4413      	add	r3, r2
  8000622:	781b      	ldrb	r3, [r3, #0]
@@ -740,11 +743,11 @@ void displayLEDMaxtrix(int index) {
  8000630:	b2db      	uxtb	r3, r3
  8000632:	461a      	mov	r2, r3
  8000634:	f44f 6180 	mov.w	r1, #1024	; 0x400
- 8000638:	482d      	ldr	r0, [pc, #180]	; (80006f0 <displayLEDMaxtrix+0x120>)
+ 8000638:	482d      	ldr	r0, [pc, #180]	; (80006f0 <displayLEDMatrix+0x120>)
  800063a:	f000 fd7d 	bl	8001138 <HAL_GPIO_WritePin>
 	//0x08 in binary is 0000 1000 => mask for forth bit
 	HAL_GPIO_WritePin(ROW_3_GPIO_Port, ROW_3_Pin, matrix_buffer[index]&0x08?RESET:SET);
- 800063e:	4a2b      	ldr	r2, [pc, #172]	; (80006ec <displayLEDMaxtrix+0x11c>)
+ 800063e:	4a2b      	ldr	r2, [pc, #172]	; (80006ec <displayLEDMatrix+0x11c>)
  8000640:	687b      	ldr	r3, [r7, #4]
  8000642:	4413      	add	r3, r2
  8000644:	781b      	ldrb	r3, [r3, #0]
@@ -756,11 +759,11 @@ void displayLEDMaxtrix(int index) {
  8000652:	b2db      	uxtb	r3, r3
  8000654:	461a      	mov	r2, r3
  8000656:	f44f 6100 	mov.w	r1, #2048	; 0x800
- 800065a:	4825      	ldr	r0, [pc, #148]	; (80006f0 <displayLEDMaxtrix+0x120>)
+ 800065a:	4825      	ldr	r0, [pc, #148]	; (80006f0 <displayLEDMatrix+0x120>)
  800065c:	f000 fd6c 	bl	8001138 <HAL_GPIO_WritePin>
 	//0x10 in binary is 0001 0000 => mask for fifth bit
 	HAL_GPIO_WritePin(ROW_4_GPIO_Port, ROW_4_Pin, matrix_buffer[index]&0x10?RESET:SET);
- 8000660:	4a22      	ldr	r2, [pc, #136]	; (80006ec <displayLEDMaxtrix+0x11c>)
+ 8000660:	4a22      	ldr	r2, [pc, #136]	; (80006ec <displayLEDMatrix+0x11c>)
  8000662:	687b      	ldr	r3, [r7, #4]
  8000664:	4413      	add	r3, r2
  8000666:	781b      	ldrb	r3, [r3, #0]
@@ -772,11 +775,11 @@ void displayLEDMaxtrix(int index) {
  8000674:	b2db      	uxtb	r3, r3
  8000676:	461a      	mov	r2, r3
  8000678:	f44f 5180 	mov.w	r1, #4096	; 0x1000
- 800067c:	481c      	ldr	r0, [pc, #112]	; (80006f0 <displayLEDMaxtrix+0x120>)
+ 800067c:	481c      	ldr	r0, [pc, #112]	; (80006f0 <displayLEDMatrix+0x120>)
  800067e:	f000 fd5b 	bl	8001138 <HAL_GPIO_WritePin>
 	//0x20 in binary is 0010 0000 => mask for sixth bit
 	HAL_GPIO_WritePin(ROW_5_GPIO_Port, ROW_5_Pin, matrix_buffer[index]&0x20?RESET:SET);
- 8000682:	4a1a      	ldr	r2, [pc, #104]	; (80006ec <displayLEDMaxtrix+0x11c>)
+ 8000682:	4a1a      	ldr	r2, [pc, #104]	; (80006ec <displayLEDMatrix+0x11c>)
  8000684:	687b      	ldr	r3, [r7, #4]
  8000686:	4413      	add	r3, r2
  8000688:	781b      	ldrb	r3, [r3, #0]
@@ -788,11 +791,11 @@ void displayLEDMaxtrix(int index) {
  8000696:	b2db      	uxtb	r3, r3
  8000698:	461a      	mov	r2, r3
  800069a:	f44f 5100 	mov.w	r1, #8192	; 0x2000
- 800069e:	4814      	ldr	r0, [pc, #80]	; (80006f0 <displayLEDMaxtrix+0x120>)
+ 800069e:	4814      	ldr	r0, [pc, #80]	; (80006f0 <displayLEDMatrix+0x120>)
  80006a0:	f000 fd4a 	bl	8001138 <HAL_GPIO_WritePin>
 	//0x40 in binary is 0100 0000 => mask for seventh bit
 	HAL_GPIO_WritePin(ROW_6_GPIO_Port, ROW_6_Pin, matrix_buffer[index]&0x40?RESET:SET);
- 80006a4:	4a11      	ldr	r2, [pc, #68]	; (80006ec <displayLEDMaxtrix+0x11c>)
+ 80006a4:	4a11      	ldr	r2, [pc, #68]	; (80006ec <displayLEDMatrix+0x11c>)
  80006a6:	687b      	ldr	r3, [r7, #4]
  80006a8:	4413      	add	r3, r2
  80006aa:	781b      	ldrb	r3, [r3, #0]
@@ -804,11 +807,11 @@ void displayLEDMaxtrix(int index) {
  80006b8:	b2db      	uxtb	r3, r3
  80006ba:	461a      	mov	r2, r3
  80006bc:	f44f 4180 	mov.w	r1, #16384	; 0x4000
- 80006c0:	480b      	ldr	r0, [pc, #44]	; (80006f0 <displayLEDMaxtrix+0x120>)
+ 80006c0:	480b      	ldr	r0, [pc, #44]	; (80006f0 <displayLEDMatrix+0x120>)
  80006c2:	f000 fd39 	bl	8001138 <HAL_GPIO_WritePin>
-	//0x80 in binary is 1000 0000 => mask for eightth bit
+	//0x80 in binary is 1000 0000 => mask for eighth bit
 	HAL_GPIO_WritePin(ROW_7_GPIO_Port, ROW_7_Pin, matrix_buffer[index]&0x80?RESET:SET);
- 80006c6:	4a09      	ldr	r2, [pc, #36]	; (80006ec <displayLEDMaxtrix+0x11c>)
+ 80006c6:	4a09      	ldr	r2, [pc, #36]	; (80006ec <displayLEDMatrix+0x11c>)
  80006c8:	687b      	ldr	r3, [r7, #4]
  80006ca:	4413      	add	r3, r2
  80006cc:	781b      	ldrb	r3, [r3, #0]
@@ -819,7 +822,7 @@ void displayLEDMaxtrix(int index) {
  80006d6:	b2db      	uxtb	r3, r3
  80006d8:	461a      	mov	r2, r3
  80006da:	f44f 4100 	mov.w	r1, #32768	; 0x8000
- 80006de:	4804      	ldr	r0, [pc, #16]	; (80006f0 <displayLEDMaxtrix+0x120>)
+ 80006de:	4804      	ldr	r0, [pc, #16]	; (80006f0 <displayLEDMatrix+0x120>)
  80006e0:	f000 fd2a 	bl	8001138 <HAL_GPIO_WritePin>
 }
  80006e4:	bf00      	nop
@@ -831,14 +834,14 @@ void displayLEDMaxtrix(int index) {
 
 080006f4 <updateLEDMatrix>:
 
-//displayD is a general function for all cases
+//displayLEDMatrix is a general function for all column cases
 //so there is no need to use the Switch-Case structure in the updateLEDMatrix function
 void updateLEDMatrix(int index) {
  80006f4:	b580      	push	{r7, lr}
  80006f6:	b082      	sub	sp, #8
  80006f8:	af00      	add	r7, sp, #0
  80006fa:	6078      	str	r0, [r7, #4]
-	index%=MAX_LED_MAXTRIX;
+	index%=MAX_LED_MATRIX;					//Make sure index is within valid range
  80006fc:	2208      	movs	r2, #8
  80006fe:	687b      	ldr	r3, [r7, #4]
  8000700:	fb93 f1f2 	sdiv	r1, r3, r2
@@ -848,9 +851,9 @@ void updateLEDMatrix(int index) {
 	enableMatrixCol(index);
  800070c:	6878      	ldr	r0, [r7, #4]
  800070e:	f7ff fef7 	bl	8000500 <enableMatrixCol>
-	displayLEDMaxtrix(index);
+	displayLEDMatrix(index);
  8000712:	6878      	ldr	r0, [r7, #4]
- 8000714:	f7ff ff5c 	bl	80005d0 <displayLEDMaxtrix>
+ 8000714:	f7ff ff5c 	bl	80005d0 <displayLEDMatrix>
 }
  8000718:	bf00      	nop
  800071a:	3708      	adds	r7, #8
@@ -1006,7 +1009,7 @@ int main(void)
  80007e6:	681b      	ldr	r3, [r3, #0]
  80007e8:	2b01      	cmp	r3, #1
  80007ea:	d1b2      	bne.n	8000752 <main+0x32>
-		  if(index_led_matrix >= MAX_LED_MAXTRIX) {
+		  if(index_led_matrix >= MAX_LED_MATRIX) {
  80007ec:	4b12      	ldr	r3, [pc, #72]	; (8000838 <main+0x118>)
  80007ee:	681b      	ldr	r3, [r3, #0]
  80007f0:	2208      	movs	r2, #8
