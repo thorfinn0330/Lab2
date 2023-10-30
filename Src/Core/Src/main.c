@@ -63,6 +63,7 @@ void update7SEG(int index){
 	index = index%MAX_LED;
 	switch(index){
 	case 0:
+		// Display the first 7 SEG with led_buffer [0]
 		HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, RESET);
 		HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, SET);
 		HAL_GPIO_WritePin(EN_2_GPIO_Port, EN_2_Pin, SET);
@@ -70,6 +71,7 @@ void update7SEG(int index){
 		display7SEG((led_buffer[index]));
 		break;
 	case 1:
+		// Display the second 7 SEG with led_buffer [1]
 		HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, SET);
 		HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, RESET);
 		HAL_GPIO_WritePin(EN_2_GPIO_Port, EN_2_Pin, SET);
@@ -77,6 +79,7 @@ void update7SEG(int index){
 		display7SEG(led_buffer[index]);
 		break;
 	case 2:
+		// Display the third 7 SEG with led_buffer [2]
 		HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, SET);
 		HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, SET);
 		HAL_GPIO_WritePin(EN_2_GPIO_Port, EN_2_Pin, RESET);
@@ -84,6 +87,7 @@ void update7SEG(int index){
 		display7SEG(led_buffer[index]);
 		break;
 	case 3:
+		// Display the forth 7 SEG with led_buffer [3]
 		HAL_GPIO_WritePin(EN_0_GPIO_Port, EN_0_Pin, SET);
 		HAL_GPIO_WritePin(EN_1_GPIO_Port, EN_1_Pin, SET);
 		HAL_GPIO_WritePin(EN_2_GPIO_Port, EN_2_Pin, SET);
@@ -288,16 +292,16 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-int counter = 50;
-int  status =0;
+int counter = 50;	//500ms
+int  status =1;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	counter--;
 	if(counter <= 0) {
-		if(index_led >= MAX_LED) index_led=0;
+		if(index_led >= MAX_LED) index_led=0;					//make sure index_led is valid
 		counter = 50;
 		update7SEG(index_led++);
-		if(status) HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
-		status = 1-status;
+		if(status) HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);	//dot led blinking in 1s
+		status = 1-status;										//status toggle every 500ms
 	}
 }
 /* USER CODE END 4 */
