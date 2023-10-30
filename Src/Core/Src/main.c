@@ -186,8 +186,8 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  setTimer0(1000);
-  setTimer1(250);
+  setTimer0(1000);			//timer0 for counter second
+  setTimer1(250);			//timer1 for scan 1HZ led7seg (250ms for every led7seg)
   updateClockBuffer();
   while (1)
   {

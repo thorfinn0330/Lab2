@@ -569,10 +569,10 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  setTimer0(1000);
+  setTimer0(1000);			//timer0 for counter second
  80004be:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
  80004c2:	f7ff fe43 	bl	800014c <setTimer0>
-  setTimer1(250);
+  setTimer1(250);			//timer1 for scan 1HZ led7seg (250ms for every led7seg)
  80004c6:	20fa      	movs	r0, #250	; 0xfa
  80004c8:	f7ff fe5a 	bl	8000180 <setTimer1>
   updateClockBuffer();
