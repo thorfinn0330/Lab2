@@ -253,9 +253,6 @@ int counter = 50;
 int status = 0;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	counter--;
-	if(status%2 == 0) {
-					HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
-				}
 	switch(status) {
 	case 0:
 		enable7SEG(status);
