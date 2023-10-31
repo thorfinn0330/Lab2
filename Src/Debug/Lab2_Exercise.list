@@ -581,14 +581,14 @@ void updateClockBuffer() {
  80004f8:	2000001c 	.word	0x2000001c
  80004fc:	20000004 	.word	0x20000004
 
-08000500 <enableMatrixRow>:
+08000500 <enableMatrixCol>:
 
-void enableMatrixRow(int row) {
+void enableMatrixCol(int col) {
  8000500:	b580      	push	{r7, lr}
  8000502:	b082      	sub	sp, #8
  8000504:	af00      	add	r7, sp, #0
  8000506:	6078      	str	r0, [r7, #4]
-	HAL_GPIO_WritePin(ENM_0_GPIO_Port, ENM_0_Pin, row==0?RESET:SET);
+	HAL_GPIO_WritePin(ENM_0_GPIO_Port, ENM_0_Pin, col==0?RESET:SET);
  8000508:	687b      	ldr	r3, [r7, #4]
  800050a:	2b00      	cmp	r3, #0
  800050c:	bf14      	ite	ne
@@ -597,9 +597,9 @@ void enableMatrixRow(int row) {
  8000512:	b2db      	uxtb	r3, r3
  8000514:	461a      	mov	r2, r3
  8000516:	2104      	movs	r1, #4
- 8000518:	482c      	ldr	r0, [pc, #176]	; (80005cc <enableMatrixRow+0xcc>)
+ 8000518:	482c      	ldr	r0, [pc, #176]	; (80005cc <enableMatrixCol+0xcc>)
  800051a:	f000 fe27 	bl	800116c <HAL_GPIO_WritePin>
-	HAL_GPIO_WritePin(ENM_1_GPIO_Port, ENM_1_Pin, row==1?RESET:SET);
+	HAL_GPIO_WritePin(ENM_1_GPIO_Port, ENM_1_Pin, col==1?RESET:SET);
  800051e:	687b      	ldr	r3, [r7, #4]
  8000520:	2b01      	cmp	r3, #1
  8000522:	bf14      	ite	ne
@@ -608,9 +608,9 @@ void enableMatrixRow(int row) {
  8000528:	b2db      	uxtb	r3, r3
  800052a:	461a      	mov	r2, r3
  800052c:	2108      	movs	r1, #8
- 800052e:	4827      	ldr	r0, [pc, #156]	; (80005cc <enableMatrixRow+0xcc>)
+ 800052e:	4827      	ldr	r0, [pc, #156]	; (80005cc <enableMatrixCol+0xcc>)
  8000530:	f000 fe1c 	bl	800116c <HAL_GPIO_WritePin>
-	HAL_GPIO_WritePin(ENM_2_GPIO_Port, ENM_2_Pin, row==2?RESET:SET);
+	HAL_GPIO_WritePin(ENM_2_GPIO_Port, ENM_2_Pin, col==2?RESET:SET);
  8000534:	687b      	ldr	r3, [r7, #4]
  8000536:	2b02      	cmp	r3, #2
  8000538:	bf14      	ite	ne
@@ -619,9 +619,9 @@ void enableMatrixRow(int row) {
  800053e:	b2db      	uxtb	r3, r3
  8000540:	461a      	mov	r2, r3
  8000542:	f44f 6180 	mov.w	r1, #1024	; 0x400
- 8000546:	4821      	ldr	r0, [pc, #132]	; (80005cc <enableMatrixRow+0xcc>)
+ 8000546:	4821      	ldr	r0, [pc, #132]	; (80005cc <enableMatrixCol+0xcc>)
  8000548:	f000 fe10 	bl	800116c <HAL_GPIO_WritePin>
-	HAL_GPIO_WritePin(ENM_3_GPIO_Port, ENM_3_Pin, row==3?RESET:SET);
+	HAL_GPIO_WritePin(ENM_3_GPIO_Port, ENM_3_Pin, col==3?RESET:SET);
  800054c:	687b      	ldr	r3, [r7, #4]
  800054e:	2b03      	cmp	r3, #3
  8000550:	bf14      	ite	ne
@@ -630,9 +630,9 @@ void enableMatrixRow(int row) {
  8000556:	b2db      	uxtb	r3, r3
  8000558:	461a      	mov	r2, r3
  800055a:	f44f 6100 	mov.w	r1, #2048	; 0x800
- 800055e:	481b      	ldr	r0, [pc, #108]	; (80005cc <enableMatrixRow+0xcc>)
+ 800055e:	481b      	ldr	r0, [pc, #108]	; (80005cc <enableMatrixCol+0xcc>)
  8000560:	f000 fe04 	bl	800116c <HAL_GPIO_WritePin>
-	HAL_GPIO_WritePin(ENM_4_GPIO_Port, ENM_4_Pin, row==4?RESET:SET);
+	HAL_GPIO_WritePin(ENM_4_GPIO_Port, ENM_4_Pin, col==4?RESET:SET);
  8000564:	687b      	ldr	r3, [r7, #4]
  8000566:	2b04      	cmp	r3, #4
  8000568:	bf14      	ite	ne
@@ -641,9 +641,9 @@ void enableMatrixRow(int row) {
  800056e:	b2db      	uxtb	r3, r3
  8000570:	461a      	mov	r2, r3
  8000572:	f44f 5180 	mov.w	r1, #4096	; 0x1000
- 8000576:	4815      	ldr	r0, [pc, #84]	; (80005cc <enableMatrixRow+0xcc>)
+ 8000576:	4815      	ldr	r0, [pc, #84]	; (80005cc <enableMatrixCol+0xcc>)
  8000578:	f000 fdf8 	bl	800116c <HAL_GPIO_WritePin>
-	HAL_GPIO_WritePin(ENM_5_GPIO_Port, ENM_5_Pin, row==5?RESET:SET);
+	HAL_GPIO_WritePin(ENM_5_GPIO_Port, ENM_5_Pin, col==5?RESET:SET);
  800057c:	687b      	ldr	r3, [r7, #4]
  800057e:	2b05      	cmp	r3, #5
  8000580:	bf14      	ite	ne
@@ -652,9 +652,9 @@ void enableMatrixRow(int row) {
  8000586:	b2db      	uxtb	r3, r3
  8000588:	461a      	mov	r2, r3
  800058a:	f44f 5100 	mov.w	r1, #8192	; 0x2000
- 800058e:	480f      	ldr	r0, [pc, #60]	; (80005cc <enableMatrixRow+0xcc>)
+ 800058e:	480f      	ldr	r0, [pc, #60]	; (80005cc <enableMatrixCol+0xcc>)
  8000590:	f000 fdec 	bl	800116c <HAL_GPIO_WritePin>
-	HAL_GPIO_WritePin(ENM_6_GPIO_Port, ENM_6_Pin, row==6?RESET:SET);
+	HAL_GPIO_WritePin(ENM_6_GPIO_Port, ENM_6_Pin, col==6?RESET:SET);
  8000594:	687b      	ldr	r3, [r7, #4]
  8000596:	2b06      	cmp	r3, #6
  8000598:	bf14      	ite	ne
@@ -663,9 +663,9 @@ void enableMatrixRow(int row) {
  800059e:	b2db      	uxtb	r3, r3
  80005a0:	461a      	mov	r2, r3
  80005a2:	f44f 4180 	mov.w	r1, #16384	; 0x4000
- 80005a6:	4809      	ldr	r0, [pc, #36]	; (80005cc <enableMatrixRow+0xcc>)
+ 80005a6:	4809      	ldr	r0, [pc, #36]	; (80005cc <enableMatrixCol+0xcc>)
  80005a8:	f000 fde0 	bl	800116c <HAL_GPIO_WritePin>
-	HAL_GPIO_WritePin(ENM_7_GPIO_Port, ENM_7_Pin, row==7?RESET:SET);
+	HAL_GPIO_WritePin(ENM_7_GPIO_Port, ENM_7_Pin, col==7?RESET:SET);
  80005ac:	687b      	ldr	r3, [r7, #4]
  80005ae:	2b07      	cmp	r3, #7
  80005b0:	bf14      	ite	ne
@@ -674,7 +674,7 @@ void enableMatrixRow(int row) {
  80005b6:	b2db      	uxtb	r3, r3
  80005b8:	461a      	mov	r2, r3
  80005ba:	f44f 4100 	mov.w	r1, #32768	; 0x8000
- 80005be:	4803      	ldr	r0, [pc, #12]	; (80005cc <enableMatrixRow+0xcc>)
+ 80005be:	4803      	ldr	r0, [pc, #12]	; (80005cc <enableMatrixCol+0xcc>)
  80005c0:	f000 fdd4 	bl	800116c <HAL_GPIO_WritePin>
 }
  80005c4:	bf00      	nop
@@ -822,6 +822,8 @@ void displayLEDMaxtrix(int index) {
  80006f0:	40010c00 	.word	0x40010c00
 
 080006f4 <updateLEDMatrix>:
+
+//add shift_bit parameter to implement animation
 void updateLEDMatrix(int index, int shift_bit) {
  80006f4:	b580      	push	{r7, lr}
  80006f6:	b082      	sub	sp, #8
@@ -835,9 +837,9 @@ void updateLEDMatrix(int index, int shift_bit) {
  8000706:	fb01 f202 	mul.w	r2, r1, r2
  800070a:	1a9b      	subs	r3, r3, r2
  800070c:	607b      	str	r3, [r7, #4]
-	enableMatrixRow(index);
+	enableMatrixCol(index);
  800070e:	6878      	ldr	r0, [r7, #4]
- 8000710:	f7ff fef6 	bl	8000500 <enableMatrixRow>
+ 8000710:	f7ff fef6 	bl	8000500 <enableMatrixCol>
 	displayLEDMaxtrix((index+shift_bit)%MAX_LED_MATRIX);
  8000714:	687a      	ldr	r2, [r7, #4]
  8000716:	683b      	ldr	r3, [r7, #0]
@@ -998,22 +1000,26 @@ int main(void)
  80007f2:	20fa      	movs	r0, #250	; 0xfa
  80007f4:	f7ff fcc4 	bl	8000180 <setTimer1>
 	  }
-	  if(timer2_flag == 1) {
+	  //update for animation shift left
+	if(timer2_flag == 1) {
  80007f8:	4b1a      	ldr	r3, [pc, #104]	; (8000864 <main+0x130>)
  80007fa:	681b      	ldr	r3, [r3, #0]
  80007fc:	2b01      	cmp	r3, #1
  80007fe:	d1b2      	bne.n	8000766 <main+0x32>
-		  if(index_led_matrix >= MAX_LED_MATRIX) {
+	  //check for scan all elements of buffers or not
+		if(index_led_matrix >= MAX_LED_MATRIX) {
  8000800:	4b19      	ldr	r3, [pc, #100]	; (8000868 <main+0x134>)
  8000802:	681b      	ldr	r3, [r3, #0]
  8000804:	2210      	movs	r2, #16
  8000806:	4293      	cmp	r3, r2
  8000808:	db0d      	blt.n	8000826 <main+0xf2>
-					index_led_matrix=0;
+		  //set index_led_matrix to the beginning of the buffer
+		  index_led_matrix=0;
  800080a:	4b17      	ldr	r3, [pc, #92]	; (8000868 <main+0x134>)
  800080c:	2200      	movs	r2, #0
  800080e:	601a      	str	r2, [r3, #0]
-					shift_bit = (shift_bit+1)% MAX_LED_MATRIX;
+		  //increase shift_bit if all elements of buffers are scanned
+		  shift_bit = (shift_bit+1)% MAX_LED_MATRIX;
  8000810:	4b16      	ldr	r3, [pc, #88]	; (800086c <main+0x138>)
  8000812:	681b      	ldr	r3, [r3, #0]
  8000814:	3301      	adds	r3, #1
@@ -1023,8 +1029,8 @@ int main(void)
  8000820:	1a9b      	subs	r3, r3, r2
  8000822:	4a12      	ldr	r2, [pc, #72]	; (800086c <main+0x138>)
  8000824:	6013      	str	r3, [r2, #0]
-		  }
-		  updateLEDMatrix(index_led_matrix++, shift_bit);
+		}
+		updateLEDMatrix(index_led_matrix++, shift_bit);
  8000826:	4b10      	ldr	r3, [pc, #64]	; (8000868 <main+0x134>)
  8000828:	681b      	ldr	r3, [r3, #0]
  800082a:	1c5a      	adds	r2, r3, #1
@@ -1035,7 +1041,7 @@ int main(void)
  8000834:	4611      	mov	r1, r2
  8000836:	4618      	mov	r0, r3
  8000838:	f7ff ff5c 	bl	80006f4 <updateLEDMatrix>
-		  setTimer2(50);
+		setTimer2(50);
  800083c:	2032      	movs	r0, #50	; 0x32
  800083e:	f7ff fcb9 	bl	80001b4 <setTimer2>
 	  if(timer0_flag == 1) {

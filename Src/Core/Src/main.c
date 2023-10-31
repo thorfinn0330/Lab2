@@ -162,15 +162,15 @@ void updateClockBuffer() {
 	led_buffer[3] = minute%10;
 }
 
-void enableMatrixRow(int row) {
-	HAL_GPIO_WritePin(ENM_0_GPIO_Port, ENM_0_Pin, row==0?RESET:SET);
-	HAL_GPIO_WritePin(ENM_1_GPIO_Port, ENM_1_Pin, row==1?RESET:SET);
-	HAL_GPIO_WritePin(ENM_2_GPIO_Port, ENM_2_Pin, row==2?RESET:SET);
-	HAL_GPIO_WritePin(ENM_3_GPIO_Port, ENM_3_Pin, row==3?RESET:SET);
-	HAL_GPIO_WritePin(ENM_4_GPIO_Port, ENM_4_Pin, row==4?RESET:SET);
-	HAL_GPIO_WritePin(ENM_5_GPIO_Port, ENM_5_Pin, row==5?RESET:SET);
-	HAL_GPIO_WritePin(ENM_6_GPIO_Port, ENM_6_Pin, row==6?RESET:SET);
-	HAL_GPIO_WritePin(ENM_7_GPIO_Port, ENM_7_Pin, row==7?RESET:SET);
+void enableMatrixCol(int col) {
+	HAL_GPIO_WritePin(ENM_0_GPIO_Port, ENM_0_Pin, col==0?RESET:SET);
+	HAL_GPIO_WritePin(ENM_1_GPIO_Port, ENM_1_Pin, col==1?RESET:SET);
+	HAL_GPIO_WritePin(ENM_2_GPIO_Port, ENM_2_Pin, col==2?RESET:SET);
+	HAL_GPIO_WritePin(ENM_3_GPIO_Port, ENM_3_Pin, col==3?RESET:SET);
+	HAL_GPIO_WritePin(ENM_4_GPIO_Port, ENM_4_Pin, col==4?RESET:SET);
+	HAL_GPIO_WritePin(ENM_5_GPIO_Port, ENM_5_Pin, col==5?RESET:SET);
+	HAL_GPIO_WritePin(ENM_6_GPIO_Port, ENM_6_Pin, col==6?RESET:SET);
+	HAL_GPIO_WritePin(ENM_7_GPIO_Port, ENM_7_Pin, col==7?RESET:SET);
 }
 
 const int MAX_LED_MATRIX = 16;
@@ -188,9 +188,11 @@ void displayLEDMaxtrix(int index) {
 	HAL_GPIO_WritePin(ROW_6_GPIO_Port, ROW_6_Pin, matrix_buffer[index]&0x40?RESET:SET);
 	HAL_GPIO_WritePin(ROW_7_GPIO_Port, ROW_7_Pin, matrix_buffer[index]&0x80?RESET:SET);
 }
+
+//add shift_bit parameter to implement animation
 void updateLEDMatrix(int index, int shift_bit) {
 	index%=MAX_LED_MATRIX;
-	enableMatrixRow(index);
+	enableMatrixCol(index);
 	displayLEDMaxtrix((index+shift_bit)%MAX_LED_MATRIX);
 }
 
@@ -261,14 +263,18 @@ int main(void)
 		  update7SEG(index_led++);
 		  setTimer1(250);
 	  }
-	  if(timer2_flag == 1) {
-		  if(index_led_matrix >= MAX_LED_MATRIX) {
-					index_led_matrix=0;
-					shift_bit = (shift_bit+1)% MAX_LED_MATRIX;
-		  }
-		  updateLEDMatrix(index_led_matrix++, shift_bit);
-		  setTimer2(50);
-	  	  }
+	  //update for animation shift left
+	if(timer2_flag == 1) {
+	  //check for scan all elements of buffers or not
+		if(index_led_matrix >= MAX_LED_MATRIX) {
+		  //set index_led_matrix to the beginning of the buffer
+		  index_led_matrix=0;
+		  //increase shift_bit if all elements of buffers are scanned
+		  shift_bit = (shift_bit+1)% MAX_LED_MATRIX;
+		}
+		updateLEDMatrix(index_led_matrix++, shift_bit);
+		setTimer2(50);
+		}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
